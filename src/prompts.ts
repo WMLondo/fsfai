@@ -1,6 +1,7 @@
-import { cancel, confirm, isCancel, select, text } from "@clack/prompts";
-import type { PackageManager } from "./types.js";
-import { validateProjectName } from "./validate.js";
+import { cancel, confirm, isCancel, multiselect, select, text } from "@clack/prompts";
+import { FRAMEWORK_ORDER, FRAMEWORKS } from "./apps/frameworks.js";
+import type { Framework, PackageManager } from "./types.js";
+import { validateAppName, validateProjectName } from "./validate.js";
 
 function exitOnCancel<T>(value: T): Exclude<T, symbol> {
   if (isCancel(value)) {
@@ -42,4 +43,34 @@ export async function askPackageManager(): Promise<PackageManager> {
       ],
     }),
   );
+}
+
+/** Multiselect de frameworks. Devuelve los elegidos en orden: nestjs, expo, nextjs. */
+export async function askFrameworks(): Promise<Framework[]> {
+  const selected = exitOnCancel(
+    await multiselect<Framework>({
+      message: "¿Qué apps quieres crear?",
+      required: true,
+      options: FRAMEWORK_ORDER.map((framework) => ({
+        value: framework,
+        label: FRAMEWORKS[framework].label,
+      })),
+    }),
+  );
+  return FRAMEWORK_ORDER.filter((framework) => selected.includes(framework));
+}
+
+export async function askAppName(
+  framework: Framework,
+  otherNames: ReadonlyArray<string>,
+): Promise<string> {
+  const { label, defaultAppName } = FRAMEWORKS[framework];
+  const name = exitOnCancel(
+    await text({
+      message: `Nombre de la app ${label}`,
+      initialValue: defaultAppName,
+      validate: (value) => validateAppName(value, otherNames),
+    }),
+  );
+  return name.trim();
 }
