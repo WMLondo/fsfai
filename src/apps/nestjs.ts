@@ -18,7 +18,7 @@ import {
   PNPM_ALLOW_BUILDS,
   TEST_DEPENDENCIES,
 } from "./nestjs-deps.js";
-import { appDir, projectRoot, removeNestedGit, runFrameworkCli } from "./shared.js";
+import { appDir, ensureGitignored, projectRoot, removeNestedGit, runFrameworkCli } from "./shared.js";
 
 // Archivos que algunas versiones de @nestjs/cli añaden y que esta CLI sustituye:
 // instrucciones de agente propias (las de la raíz las genera SPEC 03) y config de Oxlint
@@ -316,15 +316,4 @@ async function copyOrmTemplate(
     addDependencies(pkg, ORM_DEPENDENCIES[app.orm]);
     pkg.scripts = { ...pkg.scripts, ...ORM_SCRIPTS[app.orm] };
   });
-}
-
-/** Añade `entry` al `.gitignore` de la raíz del monorepo si no está ya. */
-async function ensureGitignored(root: string, entry: string): Promise<void> {
-  const file = path.join(root, ".gitignore");
-  const content = existsSync(file) ? await readFile(file, "utf8") : "";
-  if (content.split(/\r?\n/).some((line) => line.trim() === entry)) {
-    return;
-  }
-  const separator = content.length === 0 || content.endsWith("\n") ? "" : "\n";
-  await writeFile(file, `${content}${separator}${entry}\n`);
 }

@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { rm } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { log } from "@clack/prompts";
 import { RUNNERS } from "../create-turbo.js";
@@ -45,4 +45,15 @@ export async function removeNestedGit(options: ProjectOptions, app: AppSelection
   if (existsSync(gitDir)) {
     await rm(gitDir, { recursive: true, force: true });
   }
+}
+
+/** Añade `entry` al `.gitignore` de la raíz del monorepo si no está ya. */
+export async function ensureGitignored(root: string, entry: string): Promise<void> {
+  const file = path.join(root, ".gitignore");
+  const content = existsSync(file) ? await readFile(file, "utf8") : "";
+  if (content.split(/\r?\n/).some((line) => line.trim() === entry)) {
+    return;
+  }
+  const separator = content.length === 0 || content.endsWith("\n") ? "" : "\n";
+  await writeFile(file, `${content}${separator}${entry}\n`);
 }

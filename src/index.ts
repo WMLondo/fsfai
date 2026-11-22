@@ -1,7 +1,12 @@
 import { intro, log, outro } from "@clack/prompts";
 import { AI_AGENT_LABELS } from "./ai/agents.js";
 import { writeAgentFiles } from "./ai/write-agent-files.js";
-import { createExpoApp } from "./apps/expo.js";
+import {
+  askExpoPackages,
+  createExpoApp,
+  describeExpoPackages,
+  installExpoPackages,
+} from "./apps/expo.js";
 import { FRAMEWORKS } from "./apps/frameworks.js";
 import { askNestOptions, createNestApp, ORM_LABELS } from "./apps/nestjs.js";
 import { createNextApp } from "./apps/nextjs.js";
@@ -35,6 +40,7 @@ async function askAppSelection(framework: Framework, name: string): Promise<AppS
     case "nestjs":
       return { framework, name, ...(await askNestOptions()) };
     case "expo":
+      return { framework, name, ...(await askExpoPackages(name)) };
     case "nextjs":
       return { framework, name };
   }
@@ -42,7 +48,14 @@ async function askAppSelection(framework: Framework, name: string): Promise<AppS
 
 function describeApp(app: AppSelection): string {
   const base = `${FRAMEWORKS[app.framework].label}: apps/${app.name}`;
-  return app.framework === "nestjs" ? `${base} (PostgreSQL + ${ORM_LABELS[app.orm]})` : base;
+  switch (app.framework) {
+    case "nestjs":
+      return `${base} (PostgreSQL + ${ORM_LABELS[app.orm]})`;
+    case "expo":
+      return `${base} (${describeExpoPackages(app.packages)})`;
+    case "nextjs":
+      return base;
+  }
 }
 
 async function askApps(): Promise<AppSelection[]> {
@@ -100,6 +113,12 @@ async function main(): Promise<void> {
   }
 
   await installDependencies(options);
+  // `expo install` necesita el `expo` local que instala el paso anterior.
+  for (const app of options.apps) {
+    if (app.framework === "expo") {
+      await installExpoPackages(options, app);
+    }
+  }
   await writeAgentFiles(options);
   await formatMonorepo(projectRoot(options), options.packageManager);
 
