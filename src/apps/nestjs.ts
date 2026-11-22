@@ -61,6 +61,8 @@ const APP_SCRIPTS: Readonly<Record<string, string>> = {
   build: "nest build",
   start: "node dist/main.js",
   "start:repl": "nest start --watch --entryFile repl",
+  // Contrato para `@repo/api-client` (SPEC 07): compila y escribe `packages/api-client/openapi.json`.
+  "openapi:export": "nest build && node dist/openapi-export.js",
 };
 // Carpetas vacías de la estructura; `.gitkeep` para que git las versione.
 const EMPTY_DIRS = ["public", "typings", path.join("database", "migrations")];

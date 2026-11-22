@@ -12,6 +12,12 @@ import { askNestOptions, createNestApp, ORM_LABELS } from "./apps/nestjs.js";
 import { describeNextPackages } from "./apps/next-packages.js";
 import { askNextPackages, createNextApp, installNextPackages } from "./apps/nextjs.js";
 import { projectRoot } from "./apps/shared.js";
+import {
+  createApiClientPackage,
+  generateApiClient,
+  hasApiClient,
+  linkToFrontApps,
+} from "./packages/api-client.js";
 import { cleanTurboTemplate, createTurbo } from "./create-turbo.js";
 import {
   askAiAgent,
@@ -112,6 +118,10 @@ async function main(): Promise<void> {
   for (const app of options.apps) {
     await createApp(options, app);
   }
+  if (hasApiClient(options)) {
+    await createApiClientPackage(options);
+    await linkToFrontApps(options);
+  }
 
   await installDependencies(options);
   // `expo install` necesita el `expo` local que instala el paso anterior.
@@ -121,6 +131,10 @@ async function main(): Promise<void> {
     } else if (app.framework === "nextjs") {
       await installNextPackages(options, app);
     }
+  }
+  // Una sola vez, con todo instalado; un fallo solo avisa (SPEC 07).
+  if (hasApiClient(options)) {
+    await generateApiClient(options);
   }
   await writeAgentFiles(options);
   await formatMonorepo(projectRoot(options), options.packageManager);
