@@ -19,3 +19,4 @@ From the monorepo root:
 ## Mandatory rules
 
 {{rules}}
+{{externalSkills}}
