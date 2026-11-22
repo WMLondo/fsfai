@@ -1,15 +1,15 @@
 # Tests
 
-## Qué probar
+## What to test
 
-- Prueba el **comportamiento** que ve el usuario, no los detalles de implementación.
-- Prioriza lógica de negocio, funciones puras y componentes con interacción.
-- No pruebes el framework ni librerías de terceros.
+- Test the **behavior** the user sees, not implementation details.
+- Prioritize business logic, pure functions and interactive components.
+- Do not test the framework or third-party libraries.
 
-## Cómo describir los tests
+## How to describe tests
 
-- `describe` con el nombre de la unidad que se prueba.
-- `it('should …')` describiendo el comportamiento esperado.
+- `describe` with the name of the unit under test.
+- `it('should …')` describing the expected behavior.
 
 ```ts
 describe('formatCurrency', () => {
@@ -23,23 +23,23 @@ describe('formatCurrency', () => {
 });
 ```
 
-## Estructura
+## Structure
 
-- Un test se organiza en *Arrange → Act → Assert*.
-- Un comportamiento por test. Si el nombre necesita "y", son dos tests.
-- Los tests no dependen unos de otros ni del orden.
+- A test follows *Arrange → Act → Assert*.
+- One behavior per test. If the name needs "and", it is two tests.
+- Tests do not depend on each other or on their order.
 
-## Componentes
+## Components
 
-- Usa Testing Library (`@testing-library/react` o `@testing-library/react-native`).
-- Busca elementos como lo haría el usuario: por rol, texto o label. `testID`/`data-testid` como último recurso.
-- Simula interacciones con `userEvent` (web) o `fireEvent` (native).
+- Use Testing Library (`@testing-library/react` or `@testing-library/react-native`).
+- Query elements the way the user would: by role, text or label. `testID`/`data-testid` as a last resort.
+- Simulate interactions with `userEvent` (web) or `fireEvent` (native).
 
-## Ubicación
+## Location
 
-- El test va junto al archivo que prueba: `OrderItem.tsx` → `OrderItem.test.tsx`.
+- The test goes next to the file it tests: `OrderItem.tsx` → `OrderItem.test.tsx`.
 
 ## Snapshots
 
-Evítalos como test principal: se aprueban sin mirarlos y se rompen con cualquier cambio. Úsalos solo para salidas pequeñas
-y estables.
+Avoid them as the main test: they get approved without being looked at and break on any change. Use them only for small,
+stable outputs.

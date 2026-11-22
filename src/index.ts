@@ -9,7 +9,8 @@ import {
 } from "./apps/expo.js";
 import { FRAMEWORKS } from "./apps/frameworks.js";
 import { askNestOptions, createNestApp, ORM_LABELS } from "./apps/nestjs.js";
-import { createNextApp } from "./apps/nextjs.js";
+import { describeNextPackages } from "./apps/next-packages.js";
+import { askNextPackages, createNextApp, installNextPackages } from "./apps/nextjs.js";
 import { projectRoot } from "./apps/shared.js";
 import { cleanTurboTemplate, createTurbo } from "./create-turbo.js";
 import {
@@ -42,7 +43,7 @@ async function askAppSelection(framework: Framework, name: string): Promise<AppS
     case "expo":
       return { framework, name, ...(await askExpoPackages(name)) };
     case "nextjs":
-      return { framework, name };
+      return { framework, name, ...(await askNextPackages(name)) };
   }
 }
 
@@ -54,7 +55,7 @@ function describeApp(app: AppSelection): string {
     case "expo":
       return `${base} (${describeExpoPackages(app.packages)})`;
     case "nextjs":
-      return base;
+      return `${base} (${describeNextPackages(app.packages)})`;
   }
 }
 
@@ -117,6 +118,8 @@ async function main(): Promise<void> {
   for (const app of options.apps) {
     if (app.framework === "expo") {
       await installExpoPackages(options, app);
+    } else if (app.framework === "nextjs") {
+      await installNextPackages(options, app);
     }
   }
   await writeAgentFiles(options);

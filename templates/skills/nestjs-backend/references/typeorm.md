@@ -1,18 +1,18 @@
 # TypeORM — {{nestAppPath}}
 
-Base de datos PostgreSQL con [TypeORM](https://typeorm.io) y `@nestjs/typeorm`. Opciones comunes en
-`src/database/data-source-options.ts`; DataSource de la CLI en `src/database/data-source.ts`.
+PostgreSQL database with [TypeORM](https://typeorm.io) and `@nestjs/typeorm`. Shared options in
+`src/database/data-source-options.ts`; CLI DataSource in `src/database/data-source.ts`.
 
-## Schemas y entidades
+## Schemas and entities
 
-- Un schema de PostgreSQL por carpeta: `src/database/schemas/<schema>/`.
-- `schema.ts` exporta el nombre: `export const USR_SCHEMA = 'usr';`.
-- Un archivo por tabla (entidad), con columnas, índices y relaciones: `src/database/schemas/<schema>/<tabla>.ts`.
-- Tabla en la base de datos: `<schema>.<schema>_<tabla>`. Clase: `<Schema><Tabla>` en PascalCase.
-- En relaciones usa `Relation<T>` (evita problemas de imports circulares en ESM).
+- One PostgreSQL schema per folder: `src/database/schemas/<schema>/`.
+- `schema.ts` exports the name: `export const USR_SCHEMA = 'usr';`.
+- One file per table (entity), with columns, indexes and relations: `src/database/schemas/<schema>/<table>.ts`.
+- Table in the database: `<schema>.<schema>_<table>`. Class: `<Schema><Table>` in PascalCase.
+- Use `Relation<T>` in relations (avoids circular import issues in ESM).
 
 ```ts
-// src/database/schemas/usr/profile.ts → tabla usr.usr_profile
+// src/database/schemas/usr/profile.ts → table usr.usr_profile
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, type Relation } from 'typeorm';
 import { USR_SCHEMA } from './schema.js';
 import { UsrUser } from './user.js';
@@ -34,15 +34,15 @@ export class UsrProfile {
 }
 ```
 
-Después de crear la entidad:
+After creating the entity:
 
-1. Reexpórtala en `src/database/schemas/<schema>/index.ts` y añádela a la lista `<SCHEMA>_ENTITIES`.
-2. Si es un schema nuevo: añade su nombre a `SCHEMAS` y sus entidades a `ENTITIES` en
-   `src/database/schemas/index.ts`. TypeORM no crea schemas: el DataSource de la CLI los crea al conectar.
+1. Re-export it in `src/database/schemas/<schema>/index.ts` and add it to the `<SCHEMA>_ENTITIES` list.
+2. If it is a new schema: add its name to `SCHEMAS` and its entities to `ENTITIES` in
+   `src/database/schemas/index.ts`. TypeORM does not create schemas: the CLI DataSource creates them on connect.
 
-## Usar la base de datos en un servicio
+## Using the database in a service
 
-Registra las entidades del módulo con `TypeOrmModule.forFeature([...])` e inyecta el repositorio:
+Register the module's entities with `TypeOrmModule.forFeature([...])` and inject the repository:
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -62,18 +62,18 @@ export class UserService {
 
 ## Better Auth
 
-Better Auth no tiene adaptador de TypeORM: en `src/auth/auth.ts` usa su propio `pg.Pool` con
-`search_path=usr` y `modelName: 'usr_<tabla>'`. Las entidades `UsrUser`, `UsrSession`, `UsrAccount`
-y `UsrVerification` reflejan esas tablas: sus columnas usan los nombres de campo de Better Auth
-(`emailVerified`, `userId`...). No las renombres.
+Better Auth has no TypeORM adapter: `src/auth/auth.ts` uses its own `pg.Pool` with
+`search_path=usr` and `modelName: 'usr_<table>'`. The `UsrUser`, `UsrSession`, `UsrAccount`
+and `UsrVerification` entities mirror those tables: their columns use Better Auth's field names
+(`emailVerified`, `userId`...). Do not rename them.
 
 ## Scripts
 
-Desde `{{nestAppPath}}`. Usan el DataSource compilado: ejecuta `{{packageManager}} run build` antes.
+From `{{nestAppPath}}`. They use the compiled DataSource: run `{{packageManager}} run build` first.
 
-- `{{packageManager}} run entity:sync` — `typeorm schema:sync`: aplica las entidades directamente (desarrollo).
-- `{{packageManager}} run db:generate database/migrations/<nombre>` — `typeorm migration:generate`: crea
-  una migración (JavaScript ESM) con la diferencia entre las entidades y la base de datos.
-- `{{packageManager}} run db:migrate` — `typeorm migration:run`: aplica las migraciones pendientes.
+- `{{packageManager}} run entity:sync` — `typeorm schema:sync`: applies the entities directly (development).
+- `{{packageManager}} run db:generate database/migrations/<name>` — `typeorm migration:generate`: creates
+  a migration (ESM JavaScript) with the diff between the entities and the database.
+- `{{packageManager}} run db:migrate` — `typeorm migration:run`: applies pending migrations.
 
-Usa `entity:sync` en desarrollo local y migraciones (`db:generate` + `db:migrate`) para producción.
+Use `entity:sync` for local development and migrations (`db:generate` + `db:migrate`) for production.

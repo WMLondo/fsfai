@@ -1,9 +1,9 @@
-# Nombres
+# Naming
 
-## Exports con nombre
+## Named exports
 
-Solo exports con nombre (`import/no-default-export`). Hacen que el nombre sea el mismo en todo el código y facilitan
-el autocompletado y los renombrados.
+Named exports only (`import/no-default-export`). They keep the name the same across the codebase and make
+autocompletion and renames easier.
 
 ```ts
 // ❌
@@ -13,29 +13,29 @@ export default function Button() {}
 export const Button = () => {};
 ```
 
-Excepción: archivos que el framework exige con `export default` (páginas y layouts de Next.js en `src/app/`, rutas de
-Expo Router en `app/`, archivos `*.config.*`).
+Exception: files the framework requires to use `export default` (Next.js pages and layouts in `src/app/`, Expo Router
+routes in `app/`, `*.config.*` files).
 
-## Convenciones
+## Conventions
 
-| Qué | Formato | Ejemplo |
+| What | Format | Example |
 | --- | --- | --- |
-| Variables locales | camelCase | `products`, `productsFiltered` |
-| Booleanos | prefijo `is`, `has`, `should`, `can` | `isDisabled`, `hasProduct` |
-| Constantes | SCREAMING_SNAKE_CASE | `PRODUCT_ID`, `MAX_RETRIES` |
-| Objetos constantes | SCREAMING_SNAKE_CASE en singular + `as const` | `ORDER_STATUS` |
-| Funciones | camelCase, verbo | `filterProductsByType`, `formatCurrency` |
-| Tipos | PascalCase | `OrderStatus`, `ProductItem` |
-| Genéricos | `T` + nombre descriptivo | `TRequest`, `TFooBar` |
-| Componentes | PascalCase | `ProductItem`, `ProductsPage` |
-| Props de componente | `<Componente>Props` | `ProductItemProps` |
-| Hooks | prefijo `use` | `useGetProducts` |
-| Props de callback | prefijo `on` | `onClick`, `onItemSelect` |
-| Handlers internos | prefijo `handle` | `handleClick`, `handleItemSelect` |
+| Local variables | camelCase | `products`, `productsFiltered` |
+| Booleans | `is`, `has`, `should`, `can` prefix | `isDisabled`, `hasProduct` |
+| Constants | SCREAMING_SNAKE_CASE | `PRODUCT_ID`, `MAX_RETRIES` |
+| Constant objects | singular SCREAMING_SNAKE_CASE + `as const` | `ORDER_STATUS` |
+| Functions | camelCase, verb | `filterProductsByType`, `formatCurrency` |
+| Types | PascalCase | `OrderStatus`, `ProductItem` |
+| Generics | `T` + descriptive name | `TRequest`, `TFooBar` |
+| Components | PascalCase | `ProductItem`, `ProductsPage` |
+| Component props | `<Component>Props` | `ProductItemProps` |
+| Hooks | `use` prefix | `useGetProducts` |
+| Callback props | `on` prefix | `onClick`, `onItemSelect` |
+| Internal handlers | `handle` prefix | `handleClick`, `handleItemSelect` |
 
-## Abreviaturas y acrónimos
+## Abbreviations and acronyms
 
-Trátalos como palabras: solo la primera letra en mayúscula.
+Treat them as words: only the first letter capitalized.
 
 ```ts
 // ❌
@@ -45,7 +45,7 @@ FAQList, generateUserURL, productIDs
 FaqList, generateUserUrl, productIds
 ```
 
-## Genéricos
+## Generics
 
 ```ts
 // ❌
@@ -55,18 +55,18 @@ const createPair = <T, K extends keyof T>(obj: T, key: K) => [key, obj[key]];
 const createPair = <TObject, TKey extends keyof TObject>(obj: TObject, key: TKey) => [key, obj[key]];
 ```
 
-## Comentarios
+## Comments
 
-- Prefiere código expresivo a comentarios: buenos nombres, funciones pequeñas, tipos precisos.
-- Comenta el **porqué**, no el **qué**.
-- Usa TSDoc (`/** … */`) en funciones y tipos públicos que lo necesiten.
+- Prefer expressive code over comments: good names, small functions, precise types.
+- Comment the **why**, not the **what**.
+- Use TSDoc (`/** … */`) on public functions and types that need it.
 
 ```ts
 // ❌
-// convierte a minúsculas
+// convert to lowercase
 const lower = email.toLowerCase();
 
 // ✅
-// El backend compara emails sin normalizar; hay que enviarlo en minúsculas.
+// The backend compares emails without normalizing them; they must be sent in lowercase.
 const normalizedEmail = email.toLowerCase();
 ```

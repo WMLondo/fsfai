@@ -29,12 +29,12 @@ function buildRules(options: ProjectOptions): string {
 
   if (backend.length > 0) {
     rules.push(
-      `- Si tocas código en ${appPaths(backend)} o en código de backend, usa siempre la skill \`nestjs-backend\`.`,
+      `- Whenever you touch code in ${appPaths(backend)} or any backend code, always use the \`nestjs-backend\` skill.`,
     );
   }
   if (frontend.length > 0) {
     rules.push(
-      `- Si tocas código en ${appPaths(frontend)} o en código de frontend/mobile, usa siempre la skill \`typescript-frontend\`.`,
+      `- Whenever you touch code in ${appPaths(frontend)} or any frontend/mobile code, always use the \`typescript-frontend\` skill.`,
     );
   }
   return rules.join("\n");

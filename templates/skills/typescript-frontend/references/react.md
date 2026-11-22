@@ -1,12 +1,12 @@
 # React / React Native
 
-Aplica igual a Next.js y a Expo.
+Applies equally to Next.js and Expo.
 
-## Componentes
+## Components
 
-- Componentes funcionales con funciones flecha y export con nombre.
-- Las props se tipan con `type <Componente>Props`.
-- Un componente por archivo, con el mismo nombre que el archivo.
+- Functional components as arrow functions with named exports.
+- Props are typed with `type <Component>Props`.
+- One component per file, with the same name as the file.
 
 ```tsx
 type ProductItemProps = {
@@ -20,13 +20,13 @@ export const ProductItem = ({ name, price, onSelect }: ProductItemProps) => {
 };
 ```
 
-## Props obligatorias y opcionales
+## Required and optional props
 
-Igual que en los tipos: la mayoría obligatorias. Cada prop opcional es un estado más que probar.
+Same as with types: most should be required. Every optional prop is one more state to test.
 
-## Props como uniones discriminadas
+## Props as discriminated unions
 
-Si hay props que se excluyen entre sí, modélalas como unión discriminada.
+If some props are mutually exclusive, model them as a discriminated union.
 
 ```tsx
 // ❌
@@ -39,21 +39,21 @@ type StatusProps =
   | { status: 'success'; data: Order };
 ```
 
-## Contenedores y componentes de UI
+## Containers and UI components
 
-- **Contenedor** (página, feature): obtiene datos, maneja estado y efectos, y pasa datos a la UI.
-- **UI**: recibe props y renderiza. Sin data fetching ni estado global. Fácil de probar y de reutilizar.
+- **Container** (page, feature): fetches data, handles state and effects, and passes data to the UI.
+- **UI**: receives props and renders. No data fetching or global state. Easy to test and reuse.
 
-## Datos y estado
+## Data and state
 
-- Obtén datos en los contenedores o en hooks (`useGetOrders`), no en componentes de UI.
-- Mantén el estado lo más cerca posible de donde se usa. Súbelo solo cuando dos componentes lo comparten.
-- No dupliques en estado lo que se puede derivar de props o de otro estado.
+- Fetch data in containers or hooks (`useGetOrders`), not in UI components.
+- Keep state as close as possible to where it is used. Lift it only when two components share it.
+- Do not duplicate in state what can be derived from props or other state.
 
-## Pasar primitivos
+## Pass primitives
 
-Siempre que se pueda, pasa valores primitivos en lugar de objetos enteros. El componente depende solo de lo que usa y
-la memoización funciona mejor.
+Whenever possible, pass primitive values instead of whole objects. The component depends only on what it uses and
+memoization works better.
 
 ```tsx
 // ❌
@@ -65,10 +65,10 @@ la memoización funciona mejor.
 
 ## Handlers
 
-- Props de callback: `on*` (`onSelect`).
-- Funciones internas que los manejan: `handle*` (`handleSelect`).
+- Callback props: `on*` (`onSelect`).
+- Internal functions that handle them: `handle*` (`handleSelect`).
 
 ## Hooks
 
-- Prefijo `use`. Un hook, una responsabilidad.
-- Extrae lógica a un hook cuando un componente mezcla UI con lógica de datos o de estado compleja.
+- `use` prefix. One hook, one responsibility.
+- Extract logic into a hook when a component mixes UI with data logic or complex state.

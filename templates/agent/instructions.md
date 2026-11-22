@@ -1,21 +1,21 @@
 # {{projectName}}
 
-Monorepo Turborepo gestionado con **{{packageManager}}**.
+Turborepo monorepo managed with **{{packageManager}}**.
 
-## Estructura
+## Structure
 
 {{appsList}}
-- `packages/` — paquetes compartidos del monorepo.
+- `packages/` — shared monorepo packages.
 
-## Comandos
+## Commands
 
-Desde la raíz del monorepo:
+From the monorepo root:
 
-- `{{packageManager}} run dev` — arranca todas las apps en modo desarrollo.
-- `{{packageManager}} run build` — compila todas las apps y paquetes.
-- `{{packageManager}} run lint` — ejecuta Oxlint en todo el monorepo.
-- `{{packageManager}} run format` — formatea el código con Oxfmt.
+- `{{packageManager}} run dev` — starts every app in development mode.
+- `{{packageManager}} run build` — builds every app and package.
+- `{{packageManager}} run lint` — runs Oxlint across the monorepo.
+- `{{packageManager}} run format` — formats the code with Oxfmt.
 
-## Reglas obligatorias
+## Mandatory rules
 
 {{rules}}

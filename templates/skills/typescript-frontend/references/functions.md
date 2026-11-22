@@ -1,16 +1,16 @@
-# Funciones
+# Functions
 
-## Principios
+## Principles
 
-- Puras siempre que se pueda: la misma entrada da la misma salida y no hay efectos secundarios.
-- Sin estado y con una sola responsabilidad.
-- Pequeñas. Si necesitas un comentario para separar partes, sepáralas en funciones.
-- No mutes los argumentos (ver `types.md` → inmutabilidad).
+- Pure whenever possible: the same input gives the same output and there are no side effects.
+- Stateless and with a single responsibility.
+- Small. If you need a comment to separate parts, split them into functions.
+- Do not mutate arguments (see `types.md` → immutability).
 
-## Un solo objeto como argumento
+## A single object as argument
 
-Si una función recibe más de un argumento, pásale un objeto. Es más legible en la llamada, el orden no importa y se
-puede extender sin romper llamadas existentes.
+If a function takes more than one argument, pass it an object. It reads better at the call site, order does not matter,
+and it can be extended without breaking existing calls.
 
 ```ts
 // ❌
@@ -28,13 +28,13 @@ transformUserInput({
 });
 ```
 
-Excepción: funciones de un argumento evidente (`formatDate(date)`) o callbacks con firma fijada por una API.
+Exception: functions with one obvious argument (`formatDate(date)`) or callbacks whose signature is fixed by an API.
 
-## Argumentos obligatorios y opcionales
+## Required and optional arguments
 
-- La mayoría de argumentos deben ser obligatorios.
-- Los opcionales, con valor por defecto en la desestructuración.
-- Si los argumentos opcionales dependen unos de otros, usa una unión discriminada.
+- Most arguments should be required.
+- Optional ones get a default value in the destructuring.
+- If optional arguments depend on each other, use a discriminated union.
 
 ```ts
 type FetchUsersArgs = { page: number; pageSize?: number };
@@ -44,11 +44,11 @@ const fetchUsers = ({ page, pageSize = 20 }: FetchUsersArgs) => {
 };
 ```
 
-## Tipos de retorno
+## Return types
 
-- Declara el tipo de retorno en funciones exportadas y en las que devuelven uniones o promesas: documenta la intención y
-  el error aparece en la función, no en quien la usa.
-- En funciones locales y pequeñas, la inferencia está bien.
+- Declare the return type on exported functions and on those returning unions or promises: it documents intent and
+  the error shows up in the function, not in its callers.
+- For small local functions, inference is fine.
 
 ```ts
 export const getUserStatus = (user: User): UserStatus => {
@@ -56,7 +56,7 @@ export const getUserStatus = (user: User): UserStatus => {
 };
 ```
 
-## Funciones flecha
+## Arrow functions
 
-Usa funciones flecha (`const fn = () => {}`) por consistencia, salvo cuando haga falta `function` (p. ej. sobrecargas o
-genéricos en archivos `.tsx` que confunden al parser).
+Use arrow functions (`const fn = () => {}`) for consistency, except when `function` is needed (e.g. overloads or
+generics in `.tsx` files that confuse the parser).
