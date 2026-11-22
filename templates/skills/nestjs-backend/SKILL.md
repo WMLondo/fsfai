@@ -82,7 +82,7 @@ src/<name>/
 - Carpeta: `src/database/schemas/<schema>/<tabla>.ts`. **Un archivo por tabla.**
 - Nombre de la tabla en la base de datos: `<schema>.<schema>_<tabla>`.
   - Ejemplo: `src/database/schemas/usr/user.ts` → tabla `usr.usr_user`.
-- Las referencias del ORM del proyecto están en `references/` (si existen).
+- ORM: **{{ormLabel}}** sobre PostgreSQL. Cómo añadir tablas, consultar y migrar: [references/{{orm}}.md](references/{{orm}}.md).
 
 ## Validación, logs y documentación
 

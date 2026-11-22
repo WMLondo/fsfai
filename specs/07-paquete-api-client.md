@@ -1,6 +1,6 @@
 # SPEC 07 — Paquete `api-client` tipado desde el OpenAPI de NestJS
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 02, SPEC 04
 > **Date:** 2026-11-21
 > **Objective:** Crear `packages/api-client`, que genera tipos y recursos desde el OpenAPI de la app NestJS y permite llamar al backend desde el frontend con la forma `api.user.find({ name: 'user' })`.

@@ -1,6 +1,6 @@
 # SPEC 06 — App Next.js configurada con paquetes base elegibles
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 02, SPEC 03
 > **Date:** 2026-11-21
 > **Objective:** Preguntar qué paquetes base se instalan en la app Next.js (Better Auth, React Hook Form, Zod, Lucide, shadcn, nuqs, Sonner, cn), instalarlos en `latest` y dejarlos conectados con la estructura del TypeScript Style Guide.

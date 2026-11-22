@@ -1,6 +1,6 @@
 # SPEC 05 — App Expo configurada con paquetes base elegibles
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 02, SPEC 03
 > **Date:** 2026-11-21
 > **Objective:** Preguntar qué paquetes base se instalan en la app Expo, instalarlos con `expo install` en versiones compatibles con el SDK y dejar la app conectada (providers, Uniwind, cliente de Better Auth) con la estructura del TypeScript Style Guide.
