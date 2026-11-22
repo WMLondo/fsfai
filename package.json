@@ -1,8 +1,27 @@
 {
-  "name": "fsfai",
+  "name": "@alejandrohn/fsfai",
   "version": "0.1.0",
   "description": "CLI para generar entornos ya configurados",
   "type": "module",
+  "license": "MIT",
+  "author": "alejandrohn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WMLondo/fsfai.git"
+  },
+  "homepage": "https://github.com/WMLondo/fsfai#readme",
+  "bugs": {
+    "url": "https://github.com/WMLondo/fsfai/issues"
+  },
+  "keywords": [
+    "cli",
+    "turborepo",
+    "monorepo",
+    "nestjs",
+    "expo",
+    "nextjs",
+    "scaffold"
+  ],
   "bin": {
     "fsfai": "./dist/index.js"
   },
@@ -13,10 +32,16 @@
   "engines": {
     "node": ">=20"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsup",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prepublishOnly": "pnpm build",
+    "release:check": "node scripts/check-versions.mjs",
+    "release": "pnpm release:check && pnpm -r --include-workspace-root publish --access public"
   },
   "dependencies": {
     "@clack/prompts": "^1.9.0"

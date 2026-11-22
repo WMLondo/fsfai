@@ -1,5 +1,6 @@
 import { intro, log, outro } from "@clack/prompts";
 import { AI_AGENT_LABELS } from "./ai/agents.js";
+import { handleCliArgs } from "./cli-args.js";
 import { EXTERNAL_SKILLS, installExternalSkills } from "./ai/external-skills.js";
 import { writeAgentFiles } from "./ai/write-agent-files.js";
 import {
@@ -93,6 +94,7 @@ async function installDependencies(options: ProjectOptions): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  handleCliArgs(process.argv.slice(2));
   intro("fsfai");
 
   // Todas las preguntas antes de ejecutar nada.
