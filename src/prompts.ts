@@ -4,7 +4,7 @@ import { FRAMEWORK_ORDER, FRAMEWORKS } from "./apps/frameworks.js";
 import type { AiAgent, Framework, PackageManager } from "./types.js";
 import { validateAppName, validateProjectName } from "./validate.js";
 
-function exitOnCancel<T>(value: T): Exclude<T, symbol> {
+export function exitOnCancel<T>(value: T): Exclude<T, symbol> {
   if (isCancel(value)) {
     cancel("Operación cancelada");
     process.exit(0);

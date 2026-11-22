@@ -3,7 +3,7 @@ import { AI_AGENT_LABELS } from "./ai/agents.js";
 import { writeAgentFiles } from "./ai/write-agent-files.js";
 import { createExpoApp } from "./apps/expo.js";
 import { FRAMEWORKS } from "./apps/frameworks.js";
-import { createNestApp } from "./apps/nestjs.js";
+import { askNestOptions, createNestApp, ORM_LABELS } from "./apps/nestjs.js";
 import { createNextApp } from "./apps/nextjs.js";
 import { projectRoot } from "./apps/shared.js";
 import { cleanTurboTemplate, createTurbo } from "./create-turbo.js";
@@ -19,14 +19,31 @@ import { run } from "./run.js";
 import { formatMonorepo, setupOxc } from "./tooling/oxc.js";
 import type { AppSelection, Framework, ProjectOptions } from "./types.js";
 
-const APP_CREATORS: Record<
-  Framework,
-  (options: ProjectOptions, app: AppSelection) => Promise<void>
-> = {
-  nestjs: createNestApp,
-  expo: createExpoApp,
-  nextjs: createNextApp,
-};
+async function createApp(options: ProjectOptions, app: AppSelection): Promise<void> {
+  switch (app.framework) {
+    case "nestjs":
+      return createNestApp(options, app);
+    case "expo":
+      return createExpoApp(options, app);
+    case "nextjs":
+      return createNextApp(options, app);
+  }
+}
+
+async function askAppSelection(framework: Framework, name: string): Promise<AppSelection> {
+  switch (framework) {
+    case "nestjs":
+      return { framework, name, ...(await askNestOptions()) };
+    case "expo":
+    case "nextjs":
+      return { framework, name };
+  }
+}
+
+function describeApp(app: AppSelection): string {
+  const base = `${FRAMEWORKS[app.framework].label}: apps/${app.name}`;
+  return app.framework === "nestjs" ? `${base} (PostgreSQL + ${ORM_LABELS[app.orm]})` : base;
+}
 
 async function askApps(): Promise<AppSelection[]> {
   const frameworks = await askFrameworks();
@@ -36,7 +53,7 @@ async function askApps(): Promise<AppSelection[]> {
       framework,
       apps.map((app) => app.name),
     );
-    apps.push({ framework, name });
+    apps.push(await askAppSelection(framework, name));
   }
   return apps;
 }
@@ -70,7 +87,7 @@ async function main(): Promise<void> {
       `Gestor:   ${options.packageManager}`,
       `Agente:   ${AI_AGENT_LABELS[options.aiAgent]}`,
       "Apps:",
-      ...options.apps.map((app) => `  - ${FRAMEWORKS[app.framework].label}: apps/${app.name}`),
+      ...options.apps.map((app) => `  - ${describeApp(app)}`),
     ].join("\n"),
   );
 
@@ -79,7 +96,7 @@ async function main(): Promise<void> {
   await setupOxc(projectRoot(options), options.apps);
 
   for (const app of options.apps) {
-    await APP_CREATORS[app.framework](options, app);
+    await createApp(options, app);
   }
 
   await installDependencies(options);

@@ -1,6 +1,6 @@
 # SPEC 04 — App NestJS configurada (ESM, ORM, PostgreSQL, Better Auth, Pino, Scalar)
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 02, SPEC 03
 > **Date:** 2026-11-21
 > **Objective:** Convertir la app NestJS vacía en un backend ESM sobre PostgreSQL con el ORM elegido (Drizzle o TypeORM), Better Auth, nestjs-pino, class-validator, Scalar y la estructura nestjs-project-structure, con tablas segmentadas por schema.

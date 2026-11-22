@@ -1,7 +1,8 @@
-import { writeFile } from "node:fs/promises";
+import { rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { log } from "@clack/prompts";
 import { BACKEND_FRAMEWORKS, FRAMEWORKS, FRONTEND_FRAMEWORKS } from "../apps/frameworks.js";
+import { ORM_LABELS, ORMS } from "../apps/nestjs.js";
 import { projectRoot } from "../apps/shared.js";
 import { copyTemplateDir, renderTemplate } from "../templates.js";
 import type { AppSelection, Framework, ProjectOptions } from "../types.js";
@@ -59,14 +60,21 @@ export async function writeAgentFiles(options: ProjectOptions): Promise<void> {
 }
 
 async function writeBackendSkill(options: ProjectOptions, skillsDir: string): Promise<void> {
-  const [nest] = appsOf(options, BACKEND_FRAMEWORKS);
+  const nest = options.apps.find((app) => app.framework === "nestjs");
   if (!nest) {
     return;
   }
-  await copyTemplateDir("skills/nestjs-backend", path.join(skillsDir, "nestjs-backend"), {
+  const skillDir = path.join(skillsDir, "nestjs-backend");
+  await copyTemplateDir("skills/nestjs-backend", skillDir, {
     nestAppPath: `apps/${nest.name}`,
     packageManager: options.packageManager,
+    orm: nest.orm,
+    ormLabel: ORM_LABELS[nest.orm],
   });
+  // Solo queda la referencia del ORM elegido.
+  for (const orm of ORMS.filter((orm) => orm !== nest.orm)) {
+    await rm(path.join(skillDir, "references", `${orm}.md`), { force: true });
+  }
   log.step(`Creada la skill nestjs-backend en ${path.relative(projectRoot(options), skillsDir)}`);
 }
 
