@@ -1,18 +1,18 @@
 # Variables
 
-## `const` por defecto
+## `const` by default
 
-Usa `const`. `let` solo cuando el valor cambia de verdad. Nunca `var`.
+Use `const`. `let` only when the value really changes. Never `var`.
 
 ## `as const`
 
-Usa `as const` en objetos y arrays constantes: los valores pasan a ser literales y `readonly`.
+Use `as const` on constant objects and arrays: values become literals and `readonly`.
 
 ```ts
-// ❌ tipo: { count: number; users: { id: number; name: string }[] }
+// ❌ type: { x: number; y: number }
 const FOO_LOCATION = { x: 50, y: 130 };
 
-// ✅ tipo: { readonly x: 50; readonly y: 130 }
+// ✅ type: { readonly x: 50; readonly y: 130 }
 const FOO_LOCATION = { x: 50, y: 130 } as const;
 
 const USER_ROLES = ['admin', 'editor', 'viewer'] as const;
@@ -21,8 +21,8 @@ type UserRole = (typeof USER_ROLES)[number]; // 'admin' | 'editor' | 'viewer'
 
 ## Enums
 
-No uses `enum` de TypeScript: genera código en tiempo de ejecución, los numéricos aceptan cualquier número y no encaja con
-la eliminación de tipos. Usa uniones de literales o un objeto `as const`.
+Do not use TypeScript `enum`: it emits runtime code, numeric enums accept any number, and it does not play well with
+type stripping. Use literal unions or an `as const` object.
 
 ```ts
 // ❌
@@ -32,10 +32,10 @@ enum UserRole {
   ADMINISTRATOR,
 }
 
-// ✅ unión de literales
+// ✅ literal union
 type UserRole = 'guest' | 'moderator' | 'administrator';
 
-// ✅ objeto as const si necesitas iterar o tener los valores en runtime
+// ✅ as const object if you need to iterate or have the values at runtime
 const USER_ROLE = {
   guest: 'guest',
   moderator: 'moderator',
@@ -44,9 +44,9 @@ const USER_ROLE = {
 type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
 ```
 
-## Uniones de tipos
+## Type unions
 
-Prefiere uniones de literales a `string` o `number` genéricos cuando el conjunto de valores es conocido.
+Prefer literal unions over generic `string` or `number` when the set of values is known.
 
 ```ts
 // ❌
@@ -56,14 +56,14 @@ type Size = string;
 type Size = 'sm' | 'md' | 'lg';
 ```
 
-## `null` y `undefined`
+## `null` and `undefined`
 
-- `undefined`: el valor no se ha dado (propiedad opcional, argumento omitido).
-- `null`: ausencia explícita de valor (p. ej. un campo vacío que viene así de la API).
-- Elige uno por concepto y no los mezcles para lo mismo.
-- Usa `??` y `?.` en lugar de `||` y comprobaciones encadenadas.
+- `undefined`: the value was not provided (optional property, omitted argument).
+- `null`: explicit absence of a value (e.g. an empty field that comes that way from the API).
+- Pick one per concept and do not mix them for the same thing.
+- Use `??` and `?.` instead of `||` and chained checks.
 
 ```ts
-const pageSize = options.pageSize ?? 20; // ✅ respeta 0
+const pageSize = options.pageSize ?? 20; // ✅ respects 0
 const city = user.address?.city;
 ```

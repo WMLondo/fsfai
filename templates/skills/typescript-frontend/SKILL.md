@@ -1,40 +1,40 @@
 ---
 name: typescript-frontend
-description: Úsala SIEMPRE que leas, escribas o revises código de frontend o mobile (Next.js, Expo, React): componentes, hooks, tipos, formularios, data fetching o tests.
+description: Use ALWAYS when reading, writing or reviewing frontend or mobile code (Next.js, Expo, React): components, hooks, types, forms, data fetching or tests.
 ---
 
-# TypeScript frontend/mobile — guía de estilo
+# TypeScript frontend/mobile — style guide
 
-Apps: {{frontendAppPaths}}. Gestor de paquetes: **{{packageManager}}**.
+Apps: {{frontendAppPaths}}. Package manager: **{{packageManager}}**.
 
-Adaptación del [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/) de mkosir.
-Lint con **Oxlint** y formato con **Oxfmt** desde la raíz (`{{packageManager}} run lint`, `{{packageManager}} run format`).
-No añadas ESLint ni Prettier.
+Adapted from mkosir's [TypeScript Style Guide](https://mkosir.github.io/typescript-style-guide/).
+Lint with **Oxlint** and format with **Oxfmt** from the root (`{{packageManager}} run lint`, `{{packageManager}} run format`).
+Do not add ESLint or Prettier.
 
 ## TLDR
 
-- Usa `as const` para constantes: más seguridad de tipos e inmutabilidad.
-- Prefiere datos inmutables: `Readonly`, `ReadonlyArray`.
-- La mayoría de propiedades deben ser obligatorias. Las opcionales, con moderación.
-- Usa uniones discriminadas para modelar estados y variantes.
-- Evita las aserciones de tipo (`as`, `!`). Define bien los tipos.
-- Funciones puras, sin estado y con una sola responsabilidad.
-- Nombres consistentes y legibles en todo el código.
-- Solo exports con nombre. Sin `export default` (salvo archivos de ruta y configuración que lo exigen).
-- Organiza el código por funcionalidad y coloca juntos los módulos relacionados.
-- `type` en lugar de `interface` y `Array<T>` en lugar de `T[]`.
+- Use `as const` for constants: stronger type safety and immutability.
+- Prefer immutable data: `Readonly`, `ReadonlyArray`.
+- Most properties should be required. Use optional ones sparingly.
+- Use discriminated unions to model states and variants.
+- Avoid type assertions (`as`, `!`). Define the types properly.
+- Pure, stateless functions with a single responsibility.
+- Consistent, readable names across the codebase.
+- Named exports only. No `export default` (except route and config files that require it).
+- Organize code by feature and colocate related modules.
+- `type` instead of `interface` and `Array<T>` instead of `T[]`.
 
-## Qué referencia cargar
+## Which reference to load
 
-Lee solo la referencia que necesita la tarea:
+Read only the reference the task needs:
 
-| Tarea | Referencia |
+| Task | Reference |
 | --- | --- |
-| Definir o revisar tipos, `any`/`unknown`, aserciones, `type` vs `interface`, arrays, imports de tipos | `references/types.md` |
-| Modelar estados, variantes, respuestas de API o props excluyentes | `references/discriminated-unions.md` |
-| Escribir funciones: argumentos, opcionales, tipos de retorno, pureza | `references/functions.md` |
-| Constantes, `as const`, enums, `null`/`undefined` | `references/variables.md` |
-| Nombrar variables, funciones, tipos, genéricos, componentes, hooks, props, handlers; comentarios | `references/naming.md` |
-| Dónde poner un archivo, estructura de carpetas, imports | `references/source-organization.md` |
-| Componentes, props, hooks y estado en React / React Native | `references/react.md` |
-| Escribir o revisar tests | `references/tests.md` |
+| Defining or reviewing types, `any`/`unknown`, assertions, `type` vs `interface`, arrays, type imports | `references/types.md` |
+| Modeling states, variants, API responses or mutually exclusive props | `references/discriminated-unions.md` |
+| Writing functions: arguments, optionals, return types, purity | `references/functions.md` |
+| Constants, `as const`, enums, `null`/`undefined` | `references/variables.md` |
+| Naming variables, functions, types, generics, components, hooks, props, handlers; comments | `references/naming.md` |
+| Where to put a file, folder structure, imports | `references/source-organization.md` |
+| Components, props, hooks and state in React / React Native | `references/react.md` |
+| Writing or reviewing tests | `references/tests.md` |

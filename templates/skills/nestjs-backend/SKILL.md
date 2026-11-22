@@ -1,37 +1,37 @@
 ---
 name: nestjs-backend
-description: Úsala SIEMPRE que leas, escribas o revises código de backend NestJS ({{nestAppPath}}): módulos, controladores, servicios, DTOs, auth, base de datos, schemas o tests.
+description: Use ALWAYS when reading, writing or reviewing NestJS backend code ({{nestAppPath}}): modules, controllers, services, DTOs, auth, database, schemas or tests.
 ---
 
-# NestJS backend — estructura y convenciones
+# NestJS backend — structure and conventions
 
-App: `{{nestAppPath}}`. Gestor de paquetes: **{{packageManager}}**.
+App: `{{nestAppPath}}`. Package manager: **{{packageManager}}**.
 
-## Herramientas
+## Tooling
 
-- **ESM**, no CommonJS (`"type": "module"`, imports con `import`/`export`).
-- **Oxlint** en lugar de ESLint y **Oxfmt** en lugar de Prettier. Se ejecutan desde la raíz del monorepo:
-  `{{packageManager}} run lint` y `{{packageManager}} run format`. No añadas ESLint ni Prettier.
-- Usa siempre **{{packageManager}}** para instalar dependencias (`{{packageManager}} add` / `{{packageManager}} install`), nunca otro gestor.
+- **ESM**, not CommonJS (`"type": "module"`, `import`/`export` syntax).
+- **Oxlint** instead of ESLint and **Oxfmt** instead of Prettier. Run them from the monorepo root:
+  `{{packageManager}} run lint` and `{{packageManager}} run format`. Do not add ESLint or Prettier.
+- Always use **{{packageManager}}** to install dependencies (`{{packageManager}} add` / `{{packageManager}} install`), never another package manager.
 
-## Configuración
+## Configuration
 
-- La configuración vive en `src/config/envs/`, un archivo por entorno:
-  - `default.ts` — valores comunes.
-  - `development.ts`, `production.ts`, `test.ts` — sobrescriben `default` según `NODE_ENV`.
-- Las variables de entorno se documentan en `.env.sample`. Para desarrollo se copia a `.env` (que no se versiona).
-- Nunca leas `process.env` fuera de `src/config/`. El resto del código usa la configuración inyectada.
+- Configuration lives in `src/config/envs/`, one file per environment:
+  - `default.ts` — shared values.
+  - `development.ts`, `production.ts`, `test.ts` — override `default` based on `NODE_ENV`.
+- Environment variables are documented in `.env.sample`. For development, copy it to `.env` (which is not committed).
+- Never read `process.env` outside `src/config/`. The rest of the code uses the injected configuration.
 
-## Estructura de carpetas
+## Folder structure
 
 ```
 {{nestAppPath}}/
-├── bin/                  # scripts ejecutables (CLI, tareas, seeds)
-├── public/               # archivos estáticos
+├── bin/                  # executable scripts (CLI, tasks, seeds)
+├── public/               # static files
 ├── src/
-│   ├── config/           # configuración y src/config/envs/
-│   ├── auth/             # autenticación y autorización
-│   ├── common/           # piezas transversales, sin lógica de negocio
+│   ├── config/           # configuration and src/config/envs/
+│   ├── auth/             # authentication and authorization
+│   ├── common/           # cross-cutting pieces, no business logic
 │   │   ├── constants/
 │   │   ├── controllers/
 │   │   ├── decorators/
@@ -42,17 +42,17 @@ App: `{{nestAppPath}}`. Gestor de paquetes: **{{packageManager}}**.
 │   │   ├── middleware/
 │   │   ├── pipes/
 │   │   └── providers/
-│   ├── shared/           # módulos compartidos entre features
+│   ├── shared/           # modules shared across features
 │   ├── database/
-│   │   └── schemas/      # un subdirectorio por schema de PostgreSQL
-│   └── <feature>/        # un módulo por funcionalidad
-├── test/                 # tests e2e
-└── typings/              # declaraciones de tipos globales (*.d.ts)
+│   │   └── schemas/      # one subdirectory per PostgreSQL schema
+│   └── <feature>/        # one module per feature
+├── test/                 # e2e tests
+└── typings/              # global type declarations (*.d.ts)
 ```
 
-## Estructura de un módulo
+## Module structure
 
-Cada módulo de funcionalidad (`src/<name>/`) contiene:
+Each feature module (`src/<name>/`) contains:
 
 ```
 src/<name>/
@@ -63,35 +63,35 @@ src/<name>/
 └── index.ts
 ```
 
-## Nombres de archivo
+## File names
 
-- Una clase `PascalCaseSuffix` va en `pascal-case.suffix.ts`.
+- A `PascalCaseSuffix` class goes in `pascal-case.suffix.ts`.
   - `UserController` → `user.controller.ts`
   - `JwtAuthGuard` → `jwt-auth.guard.ts`
   - `CreateUserDto` → `create-user.dto.ts`
 
 ## Imports
 
-- Cada carpeta tiene un `index.ts` que reexporta su contenido público.
-- Importa siempre desde la carpeta, no desde el archivo interno: `import { UserService } from '../user';`.
-- **Nunca** importes desde una ruta que termina en `.` o `..` (`from '.'`, `from '..'`). Nombra la carpeta.
+- Every folder has an `index.ts` that re-exports its public content.
+- Always import from the folder, not from the internal file: `import { UserService } from '../user';`.
+- **Never** import from a path ending in `.` or `..` (`from '.'`, `from '..'`). Name the folder.
 
-## Base de datos
+## Database
 
-- Segmentada por **schema de PostgreSQL**.
-- Carpeta: `src/database/schemas/<schema>/<tabla>.ts`. **Un archivo por tabla.**
-- Nombre de la tabla en la base de datos: `<schema>.<schema>_<tabla>`.
-  - Ejemplo: `src/database/schemas/usr/user.ts` → tabla `usr.usr_user`.
-- ORM: **{{ormLabel}}** sobre PostgreSQL. Cómo añadir tablas, consultar y migrar: [references/{{orm}}.md](references/{{orm}}.md).
+- Segmented by **PostgreSQL schema**.
+- Folder: `src/database/schemas/<schema>/<table>.ts`. **One file per table.**
+- Table name in the database: `<schema>.<schema>_<table>`.
+  - Example: `src/database/schemas/usr/user.ts` → table `usr.usr_user`.
+- ORM: **{{ormLabel}}** on PostgreSQL. How to add tables, query and migrate: [references/{{orm}}.md](references/{{orm}}.md).
 
-## Validación, logs y documentación
+## Validation, logging and documentation
 
-- Validación de entrada con **class-validator** y **class-transformer** (DTOs + `ValidationPipe`).
-- Logs con **nestjs-pino**. No uses `console.log`.
-- Documentación OpenAPI con **Scalar**, servida en `/reference`.
+- Input validation with **class-validator** and **class-transformer** (DTOs + `ValidationPipe`).
+- Logging with **nestjs-pino**. Do not use `console.log`.
+- OpenAPI documentation with **Scalar**, served at `/reference`.
 
 ## Tests
 
 - **Vitest**.
-- Tests unitarios `*.spec.ts` junto al código que prueban.
-- Tests e2e en `test/`.
+- Unit tests `*.spec.ts` next to the code they test.
+- e2e tests in `test/`.

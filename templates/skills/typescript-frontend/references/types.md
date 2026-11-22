@@ -1,12 +1,12 @@
-# Tipos
+# Types
 
-## Inferencia
+## Inference
 
-Deja que TypeScript infiera cuando el tipo es obvio. Anota cuando estrecha el tipo o documenta una intención.
+Let TypeScript infer when the type is obvious. Annotate when it narrows the type or documents intent.
 
 ```ts
 // ❌
-const userRole: string = 'admin'; // demasiado amplio
+const userRole: string = 'admin'; // too broad
 const employees = new Map(); // Map<any, any>
 
 // ✅
@@ -14,9 +14,9 @@ const USER_ROLE = 'admin'; // 'admin'
 const employees = new Map<string, number>();
 ```
 
-## Inmutabilidad
+## Immutability
 
-Los datos son inmutables por defecto. Usa `Readonly` y `ReadonlyArray` y no mutes argumentos.
+Data is immutable by default. Use `Readonly` and `ReadonlyArray` and do not mutate arguments.
 
 ```ts
 // ❌
@@ -29,10 +29,10 @@ const removeFirstUser = (users: Array<User>) => {
 const removeFirstUser = (users: ReadonlyArray<User>) => users.slice(1);
 ```
 
-## Propiedades obligatorias y opcionales
+## Required and optional properties
 
-Haz obligatorias la mayoría de propiedades. Las opcionales multiplican los estados posibles y obligan a comprobar `undefined`.
-Si dos propiedades van siempre juntas, modela el objeto con una unión discriminada (ver `discriminated-unions.md`).
+Make most properties required. Optional ones multiply the possible states and force `undefined` checks.
+If two properties always go together, model the object with a discriminated union (see `discriminated-unions.md`).
 
 ```ts
 // ❌
@@ -49,9 +49,9 @@ type RegularUser = { role: 'regular'; id: number; email: string; dashboardAccess
 type User = AdminUser | RegularUser;
 ```
 
-## Constantes con `satisfies`
+## Constants with `satisfies`
 
-Combina `as const` con `satisfies` para validar la forma sin perder los tipos literales.
+Combine `as const` with `satisfies` to validate the shape without losing literal types.
 
 ```ts
 type OrderStatus = { pending: 'pending' | 'idle'; fulfilled: boolean; error: string };
@@ -65,17 +65,17 @@ const DEFAULT_ORDER_STATUS = {
 
 ## Template literal types
 
-Úsalos para restringir strings con un formato conocido.
+Use them to restrict strings with a known format.
 
 ```ts
 type ApiRoute = `/${'users' | 'orders'}/${number}`;
 type ButtonSize = `${'small' | 'medium' | 'large'}-${'mobile' | 'desktop'}`;
 ```
 
-## `any` y `unknown`
+## `any` and `unknown`
 
-- `any` está prohibido (`typescript/no-explicit-any`).
-- Para datos de origen desconocido usa `unknown` y estrecha con guardas de tipo o con un validador (p. ej. Zod).
+- `any` is forbidden (`typescript/no-explicit-any`).
+- For data of unknown origin use `unknown` and narrow with type guards or a validator (e.g. Zod).
 
 ```ts
 // ❌
@@ -90,25 +90,25 @@ const parse = (value: unknown) => {
 };
 ```
 
-## Aserciones de tipo y de no nulo
+## Type and non-null assertions
 
-- Evita `as`. Si el tipo no encaja, el tipo está mal definido.
-- `!` (non-null assertion) está prohibido (`typescript/no-non-null-assertion`). Comprueba el valor.
-- La única excepción habitual es `as const`.
+- Avoid `as`. If the type does not fit, the type is defined wrong.
+- `!` (non-null assertion) is forbidden (`typescript/no-non-null-assertion`). Check the value.
+- The only common exception is `as const`.
 
-## Errores de tipo
+## Type errors
 
-Si de verdad hay que silenciar un error, usa `// @ts-expect-error` con un comentario que explique por qué. Nunca `// @ts-ignore`.
+If you really must silence an error, use `// @ts-expect-error` with a comment explaining why. Never `// @ts-ignore`.
 
 ```ts
-// @ts-expect-error: la librería X tipa mal el segundo argumento (issue #123).
+// @ts-expect-error: library X mistypes the second argument (issue #123).
 legacyLib.init(config, undefined);
 ```
 
-## `type` en lugar de `interface`
+## `type` instead of `interface`
 
-Usa siempre `type` (`typescript/consistent-type-definitions`). Es más flexible (uniones, mapped types) y evita el
-"declaration merging" accidental. La excepción es extender tipos de librerías que lo exigen.
+Always use `type` (`typescript/consistent-type-definitions`). It is more flexible (unions, mapped types) and avoids
+accidental declaration merging. The exception is extending library types that require it.
 
 ```ts
 // ❌
@@ -120,7 +120,7 @@ type UserProps = { name: string };
 
 ## Arrays
 
-Usa la sintaxis genérica `Array<T>` / `ReadonlyArray<T>` (`typescript/array-type`). Se lee mejor con uniones y readonly.
+Use the generic syntax `Array<T>` / `ReadonlyArray<T>` (`typescript/array-type`). It reads better with unions and readonly.
 
 ```ts
 // ❌
@@ -132,15 +132,15 @@ const x: Array<string> = [];
 const y: ReadonlyArray<string | number> = [];
 ```
 
-## Imports y exports de tipos
+## Type imports and exports
 
-Importa los tipos con `import type` (`typescript/consistent-type-imports`).
+Import types with `import type` (`typescript/consistent-type-imports`).
 
 ```ts
 import type { User } from '@/features/user';
 import { fetchUser } from '@/features/user';
 ```
 
-## Tipos generados
+## Generated types
 
-Los tipos de la API (OpenAPI, GraphQL, ORM) se generan, no se escriben a mano. No edites archivos de `generated/`.
+API types (OpenAPI, GraphQL, ORM) are generated, not hand-written. Do not edit files in `generated/`.

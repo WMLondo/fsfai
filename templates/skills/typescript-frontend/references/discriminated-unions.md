@@ -1,25 +1,25 @@
-# Uniones discriminadas
+# Discriminated unions
 
-Una unión discriminada es una unión de tipos con una propiedad común literal (el *discriminante*: `type`, `kind`, `status`…)
-que permite a TypeScript estrechar el tipo en cada rama.
+A discriminated union is a union of types sharing a common literal property (the *discriminant*: `type`, `kind`, `status`…)
+that lets TypeScript narrow the type in each branch.
 
-## Por qué
+## Why
 
-- Eliminan estados imposibles (p. ej. `isLoading: true` y `error` a la vez).
-- Eliminan propiedades opcionales: cada variante declara exactamente lo que tiene.
-- El compilador avisa al acceder a propiedades que no existen en esa variante.
+- They eliminate impossible states (e.g. `isLoading: true` and `error` at the same time).
+- They eliminate optional properties: each variant declares exactly what it has.
+- The compiler warns when accessing properties that do not exist in that variant.
 
-## Ejemplo: estado de una petición
+## Example: request state
 
 ```ts
-// ❌ 16 combinaciones posibles, la mayoría inválidas
+// ❌ 16 possible combinations, most of them invalid
 type State = {
   isLoading?: boolean;
   data?: User;
   error?: string;
 };
 
-// ✅ 3 estados, todos válidos
+// ✅ 3 states, all valid
 type State =
   | { status: 'loading' }
   | { status: 'success'; data: User }
@@ -28,16 +28,16 @@ type State =
 const render = (state: State) => {
   switch (state.status) {
     case 'loading':
-      return 'Cargando…';
+      return 'Loading…';
     case 'success':
-      return state.data.name; // data existe aquí
+      return state.data.name; // data exists here
     case 'error':
-      return state.error; // error existe aquí
+      return state.error; // error exists here
   }
 };
 ```
 
-## Ejemplo: variantes de un dominio
+## Example: domain variants
 
 ```ts
 type Circle = { kind: 'circle'; radius: number };
@@ -54,20 +54,20 @@ const area = (shape: Shape) => {
 };
 ```
 
-## Exhaustividad
+## Exhaustiveness
 
-Al añadir una variante, todos los `switch` deben tratarla. Puedes forzarlo con `never`:
+When you add a variant, every `switch` must handle it. You can enforce this with `never`:
 
 ```ts
 const assertNever = (value: never): never => {
-  throw new Error(`Variante no tratada: ${JSON.stringify(value)}`);
+  throw new Error(`Unhandled variant: ${JSON.stringify(value)}`);
 };
 
-// en el default del switch
+// in the switch default
 default:
   return assertNever(shape);
 ```
 
-## Props de componentes
+## Component props
 
-Usa el mismo patrón para props que se excluyen entre sí (ver `react.md`).
+Use the same pattern for mutually exclusive props (see `react.md`).

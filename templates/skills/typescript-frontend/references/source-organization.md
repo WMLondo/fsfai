@@ -1,16 +1,16 @@
-# Organización del código
+# Source organization
 
-## Colocación
+## Colocation
 
-Coloca juntos los archivos que cambian juntos. Un componente, su hook, sus tipos y sus tests viven en la misma carpeta.
-Solo sube un módulo a un nivel compartido cuando lo usan dos o más funcionalidades.
+Keep together the files that change together. A component, its hook, its types and its tests live in the same folder.
+Only move a module to a shared level when two or more features use it.
 
-## Estructura por funcionalidad
+## Feature-based structure
 
 ```
 src/
-├── app/ (o rutas del framework)   # solo enrutado: páginas y layouts finos
-├── features/                      # una carpeta por funcionalidad
+├── app/ (or framework routes)     # routing only: thin pages and layouts
+├── features/                      # one folder per feature
 │   └── order/
 │       ├── components/
 │       │   └── OrderItem/
@@ -20,34 +20,34 @@ src/
 │       │   └── useGetOrders.ts
 │       ├── api.ts
 │       ├── types.ts
-│       └── index.ts               # API pública de la feature
-├── components/                    # componentes UI compartidos (sin lógica de negocio)
-├── hooks/                         # hooks compartidos
-├── utils/                         # funciones puras compartidas
+│       └── index.ts               # public API of the feature
+├── components/                    # shared UI components (no business logic)
+├── hooks/                         # shared hooks
+├── utils/                         # shared pure functions
 └── constants/
 ```
 
-## Reglas
+## Rules
 
-- Una funcionalidad expone su API pública en `index.ts`. Desde fuera se importa solo desde ahí.
-- Una funcionalidad no importa archivos internos de otra.
-- Las páginas/rutas componen funcionalidades; no contienen lógica de negocio.
-- Nada de carpetas `misc/` o `helpers/` genéricas: ponle un nombre que diga qué contiene.
+- A feature exposes its public API in `index.ts`. From the outside, import only from there.
+- A feature does not import another feature's internal files.
+- Pages/routes compose features; they contain no business logic.
+- No generic `misc/` or `helpers/` folders: give it a name that says what it contains.
 
 ## Imports
 
-- Dentro de la misma funcionalidad: imports relativos.
-- Entre funcionalidades o hacia código compartido: imports absolutos con el alias del proyecto (`@/`).
+- Within the same feature: relative imports.
+- Across features or into shared code: absolute imports with the project alias (`@/`).
 
 ```ts
-// ✅ dentro de features/order
+// ✅ inside features/order
 import { formatOrder } from '../utils';
 
-// ✅ desde otra parte
+// ✅ from elsewhere
 import { OrderItem } from '@/features/order';
 
-// ❌ ruta interna de otra feature
+// ❌ internal path of another feature
 import { OrderItem } from '@/features/order/components/OrderItem/OrderItem';
 ```
 
-- Importa los tipos con `import type`.
+- Import types with `import type`.
