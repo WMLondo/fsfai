@@ -1,0 +1,39 @@
+{
+  "name": "@alejandrohn/create-fsfai",
+  "version": "0.1.0",
+  "description": "Create a new fsfai project with `npm create @alejandrohn/fsfai`",
+  "type": "module",
+  "license": "MIT",
+  "author": "alejandrohn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WMLondo/fsfai.git",
+    "directory": "packages/create-fsfai"
+  },
+  "homepage": "https://github.com/WMLondo/fsfai#readme",
+  "bugs": {
+    "url": "https://github.com/WMLondo/fsfai/issues"
+  },
+  "keywords": [
+    "create",
+    "cli",
+    "turborepo",
+    "monorepo",
+    "scaffold"
+  ],
+  "bin": {
+    "create-fsfai": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@alejandrohn/fsfai": "workspace:*"
+  }
+}

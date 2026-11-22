@@ -25,6 +25,12 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  packages/create-fsfai:
+    dependencies:
+      '@alejandrohn/fsfai':
+        specifier: workspace:*
+        version: link:../..
+
 packages:
 
   '@clack/core@1.6.0':

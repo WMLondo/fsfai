@@ -13,6 +13,6 @@
   "devDependencies": {
     "@repo/typescript-config": "{{workspaceVersion}}",
     "openapi-typescript": "latest",
-    "typescript": "latest"
+    "typescript": "^5.9.3"
   }
 }
