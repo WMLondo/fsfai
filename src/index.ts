@@ -1,5 +1,6 @@
 import { intro, log, outro } from "@clack/prompts";
 import { AI_AGENT_LABELS } from "./ai/agents.js";
+import { EXTERNAL_SKILLS, installExternalSkills } from "./ai/external-skills.js";
 import { writeAgentFiles } from "./ai/write-agent-files.js";
 import {
   askExpoPackages,
@@ -23,6 +24,7 @@ import {
   askAiAgent,
   askAppName,
   askConfirmCreate,
+  askExternalSkills,
   askFrameworks,
   askPackageManager,
   askProjectName,
@@ -99,13 +101,19 @@ async function main(): Promise<void> {
   const packageManager = await askPackageManager();
   const apps = await askApps();
   const aiAgent = await askAiAgent();
+  const externalSkills = await askExternalSkills();
 
-  const options: ProjectOptions = { name, packageManager, aiAgent, apps };
+  const options: ProjectOptions = { name, packageManager, aiAgent, externalSkills, apps };
   log.info(
     [
       `Proyecto: ${options.name}`,
       `Gestor:   ${options.packageManager}`,
       `Agente:   ${AI_AGENT_LABELS[options.aiAgent]}`,
+      `Skills:   ${
+        options.externalSkills.length > 0
+          ? options.externalSkills.map((id) => EXTERNAL_SKILLS[id].label).join(", ")
+          : "ninguna externa"
+      }`,
       "Apps:",
       ...options.apps.map((app) => `  - ${describeApp(app)}`),
     ].join("\n"),
@@ -137,6 +145,8 @@ async function main(): Promise<void> {
     await generateApiClient(options);
   }
   await writeAgentFiles(options);
+  // Depende de la red; un fallo solo avisa (SPEC 08).
+  await installExternalSkills(options);
   await formatMonorepo(projectRoot(options), options.packageManager);
 
   const appLines = options.apps

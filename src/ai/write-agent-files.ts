@@ -7,6 +7,7 @@ import { projectRoot } from "../apps/shared.js";
 import { copyTemplateDir, renderTemplate } from "../templates.js";
 import type { AppSelection, Framework, ProjectOptions } from "../types.js";
 import { AGENT_TARGETS } from "./agents.js";
+import { EXTERNAL_SKILLS, externalSkillCommand, formatCommand } from "./external-skills.js";
 
 function appsOf(options: ProjectOptions, frameworks: ReadonlyArray<Framework>): AppSelection[] {
   return options.apps.filter((app) => frameworks.includes(app.framework));
@@ -40,6 +41,19 @@ function buildRules(options: ProjectOptions): string {
   return rules.join("\n");
 }
 
+/** Sección "External skills"; vacía si no se eligió ningún repo. */
+function buildExternalSkills(options: ProjectOptions): string {
+  if (options.externalSkills.length === 0) {
+    return "";
+  }
+  const lines = options.externalSkills.map((id) => {
+    const { repo, skills } = EXTERNAL_SKILLS[id];
+    const skillList = skills.map((skill) => `\`/${skill}\``).join(", ");
+    return `- \`${repo}\` — ${skillList}. Reinstall: \`${formatCommand(externalSkillCommand(options, id))}\``;
+  });
+  return ["", "## External skills", "", ...lines].join("\n");
+}
+
 /** Genera el archivo de instrucciones del agente y sus skills en la raíz del monorepo. */
 export async function writeAgentFiles(options: ProjectOptions): Promise<void> {
   const root = projectRoot(options);
@@ -50,6 +64,7 @@ export async function writeAgentFiles(options: ProjectOptions): Promise<void> {
     packageManager: options.packageManager,
     appsList: buildAppsList(options),
     rules: buildRules(options),
+    externalSkills: buildExternalSkills(options),
   });
   await writeFile(path.join(root, target.instructionsFile), instructions);
   log.step(`Creado ${target.instructionsFile}`);

@@ -1,7 +1,8 @@
 import { cancel, confirm, isCancel, multiselect, select, text } from "@clack/prompts";
 import { AI_AGENT_LABELS } from "./ai/agents.js";
+import { EXTERNAL_SKILL_IDS, EXTERNAL_SKILLS } from "./ai/external-skills.js";
 import { FRAMEWORK_ORDER, FRAMEWORKS } from "./apps/frameworks.js";
-import type { AiAgent, Framework, PackageManager } from "./types.js";
+import type { AiAgent, ExternalSkillId, Framework, PackageManager } from "./types.js";
 import { validateAppName, validateProjectName } from "./validate.js";
 
 export function exitOnCancel<T>(value: T): Exclude<T, symbol> {
@@ -87,4 +88,21 @@ export async function askAiAgent(): Promise<AiAgent> {
       ],
     }),
   );
+}
+
+/** Multiselect de repos de skills externas; todo marcado y se puede no elegir ninguno. */
+export async function askExternalSkills(): Promise<ExternalSkillId[]> {
+  const selected = exitOnCancel(
+    await multiselect<ExternalSkillId>({
+      message: "Skills externas para el agente",
+      required: false,
+      initialValues: EXTERNAL_SKILL_IDS,
+      options: EXTERNAL_SKILL_IDS.map((id) => ({
+        value: id,
+        label: EXTERNAL_SKILLS[id].label,
+        hint: `${EXTERNAL_SKILLS[id].repo}: ${EXTERNAL_SKILLS[id].skills.map((skill) => `/${skill}`).join(", ")}`,
+      })),
+    }),
+  );
+  return EXTERNAL_SKILL_IDS.filter((id) => selected.includes(id));
 }

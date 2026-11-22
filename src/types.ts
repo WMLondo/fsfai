@@ -1,6 +1,7 @@
 export type PackageManager = "pnpm" | "npm";
 export type Framework = "nestjs" | "expo" | "nextjs";
 export type AiAgent = "claude" | "other";
+export type ExternalSkillId = "fernando-skills";
 export type Orm = "drizzle" | "typeorm";
 export type ExpoPackage =
   | "heroui-native"
@@ -35,5 +36,6 @@ export interface ProjectOptions {
   name: string; // nombre validado del proyecto y de la carpeta
   packageManager: PackageManager;
   aiAgent: AiAgent;
+  externalSkills: ReadonlyArray<ExternalSkillId>;
   apps: ReadonlyArray<AppSelection>; // en orden: nestjs, expo, nextjs
 }
