@@ -2,14 +2,24 @@ export type PackageManager = "pnpm" | "npm";
 export type Framework = "nestjs" | "expo" | "nextjs";
 export type AiAgent = "claude" | "other";
 export type Orm = "drizzle" | "typeorm";
+export type ExpoPackage =
+  | "heroui-native"
+  | "uniwind"
+  | "better-auth"
+  | "vector-icons"
+  | "react-hook-form"
+  | "tanstack-query"
+  | "zod"
+  | "flash-list";
 
 // `name`: nombre validado; carpeta apps/<name>.
 export type AppSelection =
   | { framework: "nestjs"; name: string; orm: Orm }
-  | { framework: "expo"; name: string } // SPEC 05 lo amplía
+  | { framework: "expo"; name: string; packages: ReadonlyArray<ExpoPackage> }
   | { framework: "nextjs"; name: string }; // SPEC 06 lo amplía
 
 export type NestAppSelection = Extract<AppSelection, { framework: "nestjs" }>;
+export type ExpoAppSelection = Extract<AppSelection, { framework: "expo" }>;
 
 export interface ProjectOptions {
   name: string; // nombre validado del proyecto y de la carpeta
