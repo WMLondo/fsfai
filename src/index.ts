@@ -32,6 +32,7 @@ import {
 } from "./prompts.js";
 import { run } from "./run.js";
 import { formatMonorepo, setupOxc } from "./tooling/oxc.js";
+import { setupVscode } from "./tooling/vscode.js";
 import type { AppSelection, Framework, ProjectOptions } from "./types.js";
 
 async function createApp(options: ProjectOptions, app: AppSelection): Promise<void> {
@@ -124,6 +125,7 @@ async function main(): Promise<void> {
   await createTurbo(options);
   await cleanTurboTemplate(projectRoot(options));
   await setupOxc(projectRoot(options), options.apps);
+  await setupVscode(projectRoot(options));
 
   for (const app of options.apps) {
     await createApp(options, app);
