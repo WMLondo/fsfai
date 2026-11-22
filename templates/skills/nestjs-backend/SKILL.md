@@ -90,6 +90,16 @@ src/<name>/
 - Logging with **nestjs-pino**. Do not use `console.log`.
 - OpenAPI documentation with **Scalar**, served at `/reference`.
 
+## Typed client (`@repo/api-client`)
+
+- `packages/api-client` is generated from this app's OpenAPI. After changing a controller, run `api:generate` from
+  the monorepo root and commit `openapi.json` and `src/generated/`.
+- Resource = controller name without `Controller`, in camelCase; function = method name
+  (`UserController.find` → `api.user.find(params)`). Keep the default `operationId` of `@nestjs/swagger`.
+- `params` is one object: keys matching a route param go to the route, the rest to the query (`GET`, `DELETE`) or the
+  JSON body (`POST`, `PUT`, `PATCH`). **Do not give a body DTO a key with the same name as a route param**: it goes
+  to the route, not to the body.
+
 ## Tests
 
 - **Vitest**.
