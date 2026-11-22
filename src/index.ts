@@ -1,4 +1,6 @@
 import { intro, log, outro } from "@clack/prompts";
+import { AI_AGENT_LABELS } from "./ai/agents.js";
+import { writeAgentFiles } from "./ai/write-agent-files.js";
 import { createExpoApp } from "./apps/expo.js";
 import { FRAMEWORKS } from "./apps/frameworks.js";
 import { createNestApp } from "./apps/nestjs.js";
@@ -6,6 +8,7 @@ import { createNextApp } from "./apps/nextjs.js";
 import { projectRoot } from "./apps/shared.js";
 import { cleanTurboTemplate, createTurbo } from "./create-turbo.js";
 import {
+  askAiAgent,
   askAppName,
   askConfirmCreate,
   askFrameworks,
@@ -13,6 +16,7 @@ import {
   askProjectName,
 } from "./prompts.js";
 import { run } from "./run.js";
+import { formatMonorepo, setupOxc } from "./tooling/oxc.js";
 import type { AppSelection, Framework, ProjectOptions } from "./types.js";
 
 const APP_CREATORS: Record<
@@ -57,12 +61,14 @@ async function main(): Promise<void> {
   const name = await askProjectName();
   const packageManager = await askPackageManager();
   const apps = await askApps();
+  const aiAgent = await askAiAgent();
 
-  const options: ProjectOptions = { name, packageManager, apps };
+  const options: ProjectOptions = { name, packageManager, aiAgent, apps };
   log.info(
     [
       `Proyecto: ${options.name}`,
       `Gestor:   ${options.packageManager}`,
+      `Agente:   ${AI_AGENT_LABELS[options.aiAgent]}`,
       "Apps:",
       ...options.apps.map((app) => `  - ${FRAMEWORKS[app.framework].label}: apps/${app.name}`),
     ].join("\n"),
@@ -70,12 +76,15 @@ async function main(): Promise<void> {
 
   await createTurbo(options);
   await cleanTurboTemplate(projectRoot(options));
+  await setupOxc(projectRoot(options), options.apps);
 
   for (const app of options.apps) {
     await APP_CREATORS[app.framework](options, app);
   }
 
   await installDependencies(options);
+  await writeAgentFiles(options);
+  await formatMonorepo(projectRoot(options), options.packageManager);
 
   const appLines = options.apps
     .map((app) => `   - apps/${app.name} (${FRAMEWORKS[app.framework].label})`)
