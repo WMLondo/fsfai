@@ -1,6 +1,7 @@
 import { cancel, confirm, isCancel, multiselect, select, text } from "@clack/prompts";
+import { AI_AGENT_LABELS } from "./ai/agents.js";
 import { FRAMEWORK_ORDER, FRAMEWORKS } from "./apps/frameworks.js";
-import type { Framework, PackageManager } from "./types.js";
+import type { AiAgent, Framework, PackageManager } from "./types.js";
 import { validateAppName, validateProjectName } from "./validate.js";
 
 function exitOnCancel<T>(value: T): Exclude<T, symbol> {
@@ -73,4 +74,17 @@ export async function askAppName(
     }),
   );
   return name.trim();
+}
+
+export async function askAiAgent(): Promise<AiAgent> {
+  return exitOnCancel(
+    await select<AiAgent>({
+      message: "¿Qué agente de IA usas?",
+      initialValue: "claude",
+      options: [
+        { value: "claude", label: AI_AGENT_LABELS.claude },
+        { value: "other", label: AI_AGENT_LABELS.other },
+      ],
+    }),
+  );
 }

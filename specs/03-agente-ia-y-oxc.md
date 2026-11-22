@@ -1,6 +1,6 @@
 # SPEC 03 — Agente IA, skills de convenciones y Oxlint/Oxfmt en el monorepo
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 01, SPEC 02
 > **Date:** 2026-11-21
 > **Objective:** Preguntar qué agente IA se usa, generar su archivo de instrucciones y las skills de backend y frontend/mobile según las apps elegidas, y reemplazar ESLint/Prettier por Oxlint/Oxfmt en todo el monorepo.
